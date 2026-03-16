@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -53,7 +54,7 @@ model EntryFile {
   id        String   @id @default(cuid())
   entryId   String
   name      String
-  path      String
+  path      String   @db.Text
   size      Int
   type      String
   createdAt DateTime @default(now())
@@ -69,7 +70,7 @@ model Document {
   name      String
   fileName  String
   category  String
-  path      String
+  path      String   @db.Text
   size      Int
   type      String
   createdAt DateTime @default(now())
@@ -101,7 +102,7 @@ model AiConversation {
   id           String   @id @default(cuid())
   userId       String
   title        String?
-  messagesJson String   @default("[]")
+  messagesJson String   @default("[]") @db.Text
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -114,7 +115,7 @@ model SharedLink {
   id         String   @id @default(cuid())
   userId     String
   token      String   @unique
-  configJson String   @default("{}")
+  configJson String   @default("{}") @db.Text
   expiresAt  DateTime
   createdAt  DateTime @default(now())
 
